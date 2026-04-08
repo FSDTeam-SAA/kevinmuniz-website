@@ -44,12 +44,12 @@ export default function CampaignCard({ campaign }: CampaignCardProps) {
 
   return (
     <Card className="group h-full overflow-hidden rounded-[26px] border border-[#DDEEFE] bg-white/90 shadow-[0_18px_50px_rgba(46,171,252,0.12)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_24px_60px_rgba(140,92,255,0.18)]">
-      <div className="relative h-[300px] w-full overflow-hidden rounded-t-[26px]">
+      <div className="relative aspect-[5/4] w-full overflow-hidden rounded-t-[26px] bg-slate-100">
         <Image
           src={campaign.image}
           alt={campaign.title}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-contain p-3 transition-transform duration-700 group-hover:scale-[1.03]"
         />
 
         <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/45 via-black/10 to-transparent" />
@@ -59,7 +59,7 @@ export default function CampaignCard({ campaign }: CampaignCardProps) {
         </div>
       </div>
 
-      <CardContent className="flex h-[300px] flex-col p-6 pb-8">
+      <CardContent className="flex min-h-[200px] flex-col p-6 pb-5">
         <h3 className="line-clamp-2 text-xl md:text-2xl lg:text-[28px] font-semibold leading-tight text-slate-900">
           {campaign.title}
         </h3>
@@ -68,14 +68,14 @@ export default function CampaignCard({ campaign }: CampaignCardProps) {
           {campaign.category}
         </p>
 
-        <p className="mt-4 flex-1 text-sm leading-7 text-slate-600">
+        <p className="mt-4 line-clamp-3 text-sm leading-7 text-slate-600">
           {shortDescription}
         </p>
 
         <Button
           type="button"
           variant="link"
-          className="-mt-.5 h-auto w-fit p-0 text-sm font-semibold text-[#2EABFC] hover:text-[#1B8FE0]"
+          className="mt-5 h-auto w-fit p-0 text-sm font-semibold text-[#2EABFC] hover:text-[#1B8FE0]"
           onClick={handleReadMore}
         >
           Read More
