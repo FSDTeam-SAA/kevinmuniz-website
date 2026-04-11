@@ -101,7 +101,7 @@ export interface DiscoverCampaignDetailResponse {
   donorPagination?: DiscoverCampaignPagination
   rewards: DiscoverCampaignReward[]
   isTracked: boolean
-  producer: DiscoverCampaignProducer | null
+  producers: DiscoverCampaignProducer[]
 }
 
 export interface CreateDonationSessionResponse {

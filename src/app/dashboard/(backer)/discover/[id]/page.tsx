@@ -137,7 +137,7 @@ export default function DiscoverCampaignDetailsPage() {
     totalRaised,
     totalDonations,
     donors,
-    producer,
+    producers = [],
     isTracked,
     rewards,
   } = data
@@ -145,9 +145,6 @@ export default function DiscoverCampaignDetailsPage() {
   const creatorName = [campaign.createdBy.firstName, campaign.createdBy.lastName]
     .filter(Boolean)
     .join(' ')
-  const producerName = producer
-    ? [producer.firstName, producer.lastName].filter(Boolean).join(' ')
-    : ''
   const trackButtonLabel = isTracked ? 'Tracked' : 'Track Campaign'
   const handleChangeReward = () => {
     const rewardsSection = document.getElementById('campaign-rewards-section')
@@ -262,21 +259,21 @@ export default function DiscoverCampaignDetailsPage() {
             </div>
           </section>
 
-          {!isInactive && producer && (
+          {!isInactive && producers.length > 0 && (
             <section className="overflow-hidden rounded-[24px] border border-[#D7E8FF] bg-white">
               <div className="h-1.5 w-full bg-gradient-to-r from-[#2EABFC] to-[#8C5CFF]" />
               <div className="space-y-6 p-6 md:p-8">
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#2EABFC]">
-                      Approved Producer
+                      Approved Producers
                     </p>
                     <h2 className="mt-2 text-2xl font-bold text-[#111827]">
                       Producer Information
                     </h2>
                     <p className="mt-2 text-sm text-[#6B7280]">
-                      This active campaign is currently backed by an approved
-                      producing representative.
+                      This active campaign is currently backed by approved
+                      producing representative(s).
                     </p>
                   </div>
                   <div className="inline-flex items-center gap-2 rounded-full bg-[#E6F6F0] px-4 py-2 text-sm font-semibold text-[#0BB05F]">
@@ -285,72 +282,80 @@ export default function DiscoverCampaignDetailsPage() {
                   </div>
                 </div>
 
-                <div className="rounded-[22px] border border-[#E7EEF7] bg-[linear-gradient(180deg,#F9FCFF_0%,#FFFFFF_100%)] p-5">
-                  <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#EAF6FF] text-lg font-bold text-[#2EABFC]">
-                        {producer.profileImage ? (
-                          <Image
-                            src={producer.profileImage}
-                            alt={producerName || 'Approved Producer'}
-                            width={64}
-                            height={64}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          producerName?.charAt(0).toUpperCase() || 'P'
-                        )}
+                <div className="space-y-6">
+                  {producers.map((producer, index) => {
+                    const producerName = [producer.firstName, producer.lastName].filter(Boolean).join(' ');
+
+                    return (
+                      <div key={producer._id || index} className="rounded-[22px] border border-[#E7EEF7] bg-[linear-gradient(180deg,#F9FCFF_0%,#FFFFFF_100%)] p-5">
+                        <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#EAF6FF] text-lg font-bold text-[#2EABFC]">
+                              {producer.profileImage ? (
+                                <Image
+                                  src={producer.profileImage}
+                                  alt={producerName || 'Approved Producer'}
+                                  width={64}
+                                  height={64}
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                producerName?.charAt(0).toUpperCase() || 'P'
+                              )}
+                            </div>
+
+                            <div>
+                              <h3 className="text-xl font-bold text-[#111827]">
+                                {producerName || 'Approved Producer'}
+                              </h3>
+                              <p className="mt-1 text-sm text-[#6B7280]">
+                                Producing Representative
+                              </p>
+                              {producer.email && (
+                                <p className="mt-2 inline-flex items-center gap-2 text-sm text-[#4B5563]">
+                                  <Mail className="h-4 w-4 text-[#2EABFC]" />
+                                  {producer.email}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          {producer.imdbPageLink && (
+                            <a
+                              href={producer.imdbPageLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#D7E8FF] px-5 text-sm font-semibold text-[#2EABFC] transition-colors hover:bg-[#F3FAFF]"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              View IMDb Profile
+                            </a>
+                          )}
+                        </div>
+
+                        <div className="mt-5 grid gap-4 border-t border-[#EEF2F7] pt-5 md:grid-cols-2">
+                          <div className="rounded-[18px] border border-[#EEF5FF] bg-white p-4">
+                            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9AA0A6]">
+                              Production Company
+                            </p>
+                            <p className="mt-3 inline-flex items-center gap-2 text-base font-semibold text-[#111827]">
+                              <Building2 className="h-4 w-4 text-[#8C5CFF]" />
+                              {producer.productionCompany || 'Independent Producer'}
+                            </p>
+                          </div>
+
+                          <div className="rounded-[18px] border border-[#EEF5FF] bg-white p-4">
+                            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9AA0A6]">
+                              Producer Status
+                            </p>
+                            <p className="mt-3 text-base font-semibold text-[#111827]">
+                              Approved to represent this campaign
+                            </p>
+                          </div>
+                        </div>
                       </div>
-
-                      <div>
-                        <h3 className="text-xl font-bold text-[#111827]">
-                          {producerName || 'Approved Producer'}
-                        </h3>
-                        <p className="mt-1 text-sm text-[#6B7280]">
-                          Producing Representative
-                        </p>
-                        {producer.email && (
-                          <p className="mt-2 inline-flex items-center gap-2 text-sm text-[#4B5563]">
-                            <Mail className="h-4 w-4 text-[#2EABFC]" />
-                            {producer.email}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {producer.imdbPageLink && (
-                      <a
-                        href={producer.imdbPageLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#D7E8FF] px-5 text-sm font-semibold text-[#2EABFC] transition-colors hover:bg-[#F3FAFF]"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        View IMDb Profile
-                      </a>
-                    )}
-                  </div>
-
-                  <div className="mt-5 grid gap-4 border-t border-[#EEF2F7] pt-5 md:grid-cols-2">
-                    <div className="rounded-[18px] border border-[#EEF5FF] bg-white p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9AA0A6]">
-                        Production Company
-                      </p>
-                      <p className="mt-3 inline-flex items-center gap-2 text-base font-semibold text-[#111827]">
-                        <Building2 className="h-4 w-4 text-[#8C5CFF]" />
-                        {producer.productionCompany || 'Independent Producer'}
-                      </p>
-                    </div>
-
-                    <div className="rounded-[18px] border border-[#EEF5FF] bg-white p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9AA0A6]">
-                        Producer Status
-                      </p>
-                      <p className="mt-3 text-base font-semibold text-[#111827]">
-                        Approved to represent this campaign
-                      </p>
-                    </div>
-                  </div>
+                    )
+                  })}
                 </div>
               </div>
             </section>

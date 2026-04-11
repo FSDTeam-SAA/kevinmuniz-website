@@ -106,9 +106,8 @@ export default function CampaignCard({
           </Button>
           <Button
             type="button"
-            disabled={campaign.activeStatus === 'active'}
             onClick={() => onProduce(campaign._id)}
-            className="h-[42px] rounded-full bg-gradient-to-r from-[#8C5CFF] to-[#7C5CFF] text-sm font-medium text-white hover:from-[#7F51F5] hover:to-[#744CF2] disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-[42px] rounded-full bg-gradient-to-r from-[#8C5CFF] to-[#7C5CFF] text-sm font-medium text-white hover:from-[#7F51F5] hover:to-[#744CF2]"
           >
             Produce this project
           </Button>
