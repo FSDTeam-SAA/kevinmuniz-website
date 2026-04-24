@@ -52,7 +52,7 @@ const fetchFeaturedCampaigns = async (): Promise<CampaignItem[]> => {
     {
       params: {
         approvalStatus: "accepted",
-        activeStatus: "active",
+        isFeatured: true,
         page: 1,
         limit: 8,
       },
@@ -145,7 +145,7 @@ export default function FeaturedCampaignsSection() {
                 Featured campaigns are coming soon.
               </p>
               <p className="mt-2 text-sm text-[#6B7280]">
-                New active campaigns will appear here automatically.
+                Featured campaigns will appear here once they are selected.
               </p>
             </div>
           )}
