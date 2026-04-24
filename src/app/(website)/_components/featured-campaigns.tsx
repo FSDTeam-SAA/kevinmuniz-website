@@ -1,6 +1,4 @@
 "use client";
-
-import * as React from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Sparkles } from "lucide-react";
@@ -75,18 +73,6 @@ export default function FeaturedCampaignsSection() {
     queryFn: fetchFeaturedCampaigns,
   });
 
-  const displayCampaigns = React.useMemo(() => {
-    if (campaigns.length <= 1) {
-      return campaigns;
-    }
-
-    if (campaigns.length <= 3) {
-      return [...campaigns, ...campaigns];
-    }
-
-    return campaigns;
-  }, [campaigns]);
-
   return (
     <section className="w-full overflow-hidden py-12 md:py-16 lg:py-20">
       <div className="container mx-auto px-4">
@@ -115,19 +101,19 @@ export default function FeaturedCampaignsSection() {
                 />
               ))}
             </div>
-          ) : displayCampaigns.length > 0 ? (
+          ) : campaigns.length > 0 ? (
             <div className="relative py-2">
               <Carousel
                 opts={{
                   align: "start",
-                  loop: true,
+                  loop: campaigns.length > 4,
                 }}
                 className="w-full"
               >
                 <CarouselContent className="-ml-6">
-                  {displayCampaigns.map((campaign, index) => (
+                  {campaigns.map((campaign) => (
                     <CarouselItem
-                      key={`${campaign.id}-${index}`}
+                      key={campaign.id}
                        className="pl-6 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                     >
                       <CampaignCard campaign={campaign} />
