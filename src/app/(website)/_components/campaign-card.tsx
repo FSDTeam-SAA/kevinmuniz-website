@@ -13,7 +13,6 @@ export interface CampaignItem {
   category: string
   description: string
   image: string
-  expiresIn: string
 }
 
 interface CampaignCardProps {
@@ -51,12 +50,6 @@ export default function CampaignCard({ campaign }: CampaignCardProps) {
           fill
           className="object-contain p-3 transition-transform duration-700 group-hover:scale-[1.03]"
         />
-
-        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/45 via-black/10 to-transparent" />
-
-        <div className="absolute left-4 top-4 rounded-full bg-[#6F4BFF] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white shadow-lg">
-          {campaign.expiresIn}
-        </div>
       </div>
 
       <CardContent className="flex min-h-[200px] flex-col p-6 pb-5">

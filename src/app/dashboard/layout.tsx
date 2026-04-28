@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import React from 'react'
@@ -5,6 +6,13 @@ import DashboardSidebar from '@/components/dashboard/Sidebar'
 import { authOptions } from "@/lib/auth"
 import DashboardHeader from '@/components/dashboard/Header'
 import NotificationProvider from '@/components/providers/NotificationProvider'
+
+export const metadata: Metadata = {
+    robots: {
+        index: false,
+        follow: false,
+    },
+}
 
 async function DashboardLayout({ children }: { children: React.ReactNode }) {
     const session = await getServerSession(authOptions)

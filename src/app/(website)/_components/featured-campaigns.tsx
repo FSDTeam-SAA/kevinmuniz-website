@@ -29,21 +29,6 @@ type FeaturedCampaignsResponse = {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const getDaysLeftLabel = (endDate: string) => {
-  const diff = new Date(endDate).getTime() - Date.now();
-  const daysLeft = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-
-  if (daysLeft === 0) {
-    return "Closing today";
-  }
-
-  if (daysLeft === 1) {
-    return "1 day left";
-  }
-
-  return `${daysLeft} days left`;
-};
-
 const fetchFeaturedCampaigns = async (): Promise<CampaignItem[]> => {
   const response = await axios.get<{ data: FeaturedCampaignsResponse }>(
     `${API_URL}/campaign`,
@@ -63,7 +48,6 @@ const fetchFeaturedCampaigns = async (): Promise<CampaignItem[]> => {
     category: campaign.category?.name || "Featured Project",
     description: campaign.shortDescription,
     image: campaign.image || "/assets/images/autoLogo.png",
-    expiresIn: getDaysLeftLabel(campaign.endDate),
   }));
 };
 
