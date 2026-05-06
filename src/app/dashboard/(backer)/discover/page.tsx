@@ -3,8 +3,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Filter, Search } from 'lucide-react'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { AppPagination } from '@/components/share/AppPagination'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -23,6 +24,7 @@ export default function DiscoverPage() {
   const { data: session } = useSession()
   const token = session?.user?.accessToken || ''
   const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(
     null,
   )
@@ -30,9 +32,14 @@ export default function DiscoverPage() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [isSearchInteractive, setIsSearchInteractive] = useState(false)
 
+  useEffect(() => {
+    setPage(1)
+  }, [search, selectedCategoryIds])
+
   const { data, isLoading } = useQuery({
-    queryKey: ['discover-campaigns', search, selectedCategoryIds],
-    queryFn: () => fetchActiveCampaigns(token, 1, search, selectedCategoryIds),
+    queryKey: ['discover-campaigns', page, search, selectedCategoryIds],
+    queryFn: () =>
+      fetchActiveCampaigns(token, page, search, selectedCategoryIds),
     enabled: !!token,
   })
 
@@ -179,6 +186,17 @@ export default function DiscoverPage() {
         {!isLoading && !campaigns.length && (
           <div className="mt-4 rounded-[12px] bg-white p-10 text-center text-sm text-[#777777] shadow-[0_4px_14px_rgba(17,24,39,0.04)]">
             No active campaigns found.
+          </div>
+        )}
+
+        {data?.pagination && data.pagination.totalPages > 1 && (
+          <div className="mt-4">
+            <AppPagination
+              currentPage={data.pagination.currentPage}
+              totalPages={data.pagination.totalPages}
+              totalData={data.pagination.totalData}
+              onPageChange={setPage}
+            />
           </div>
         )}
       </div>

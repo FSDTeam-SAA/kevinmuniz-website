@@ -1,17 +1,36 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
+import { AppPagination } from '@/components/share/AppPagination'
 import { Button } from '@/components/ui/button'
 import { relativeTime } from '@/lib/relativeTime'
 import { useNotification } from '@/components/providers/NotificationProvider'
 
+const NOTIFICATIONS_PER_PAGE = 10
+
 function NotificationsContent() {
   const { data: session } = useSession()
   const { notifications, unreadCount, markAllRead, markOneRead } = useNotification()
+  const [page, setPage] = useState(1)
 
   const sectionTitle =
     session?.user?.role === 'CREATOR' ? 'My Campaigns' : 'My Donations'
+  const totalPages = Math.max(
+    1,
+    Math.ceil(notifications.length / NOTIFICATIONS_PER_PAGE),
+  )
+  const paginatedNotifications = notifications.slice(
+    (page - 1) * NOTIFICATIONS_PER_PAGE,
+    page * NOTIFICATIONS_PER_PAGE,
+  )
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages)
+    }
+  }, [page, totalPages])
 
   const handleMarkAllRead = async () => {
     try {
@@ -55,7 +74,7 @@ function NotificationsContent() {
           <h2 className="mb-5 text-lg font-semibold text-[#1F2937]">{sectionTitle}</h2>
 
           <div className="space-y-3">
-            {notifications.map(notification => (
+            {paginatedNotifications.map(notification => (
               <button
                 key={notification._id}
                 type="button"
@@ -92,6 +111,17 @@ function NotificationsContent() {
               </div>
             )}
           </div>
+
+          {notifications.length > NOTIFICATIONS_PER_PAGE && (
+            <div className="mt-6">
+              <AppPagination
+                currentPage={page}
+                totalPages={totalPages}
+                totalData={notifications.length}
+                onPageChange={setPage}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

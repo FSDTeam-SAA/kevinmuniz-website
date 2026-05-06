@@ -9,6 +9,7 @@ import { Download, ExternalLink, LoaderCircle, Search, MapPin, Mail } from "luci
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AppPagination } from "@/components/share/AppPagination";
 import { fetchCommunityUsers } from "./api";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -175,26 +176,14 @@ export default function CommunityPage() {
                         ))}
                     </div>
 
-                    {/* Simple Pagination */}
                     {data?.paginationInfo && data.paginationInfo.totalPages > 1 && (
-                        <div className="flex items-center justify-center gap-4 pt-6">
-                            <Button
-                                variant="outline"
-                                disabled={!data.paginationInfo.hasPreviousPage}
-                                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                            >
-                                Previous
-                            </Button>
-                            <span className="text-sm font-medium text-gray-600">
-                                Page {data.paginationInfo.currentPage} of {data.paginationInfo.totalPages}
-                            </span>
-                            <Button
-                                variant="outline"
-                                disabled={!data.paginationInfo.hasNextPage}
-                                onClick={() => setPage((p) => p + 1)}
-                            >
-                                Next
-                            </Button>
+                        <div className="pt-6">
+                            <AppPagination
+                                currentPage={data.paginationInfo.currentPage}
+                                totalPages={data.paginationInfo.totalPages}
+                                totalData={data.paginationInfo.totalItems}
+                                onPageChange={setPage}
+                            />
                         </div>
                     )}
                 </>
